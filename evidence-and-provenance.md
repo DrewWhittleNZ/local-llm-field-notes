@@ -3,7 +3,7 @@
 ## Public-safe extracts for the local-LLM field report
 
 **Prepared by:** Codex  
-**Last updated:** 15 October 2026  
+**Last updated:** 16 October 2026
 **Companions:** [technical report](from-tokens-per-second-to-decision-quality.md) and [plain-language report](from-faster-answers-to-better-decisions.md)  
 **Scope:** Selected numerical extracts and provenance boundaries.
 
@@ -153,8 +153,24 @@ Pass minutes are sums of the ticker rows in the retained matrix, to one decimal.
 
 In the offline whole-watchlist audit, S lost 47 probe terms versus K's 60 while sending roughly 10-17% less text. S reached KPG's 33.3% *pro forma* gearing paragraph at 10K and 15K characters; K needed 20K. Neither arm cited that pro forma figure in any of its three KPG reports. All six cited the **current** 37.4% gearing supplied by Python's REIT facts block. Better passage coverage therefore did not yield a detected report-level benefit under this equal-budget test. The result does not prove that BM25 is generally worse, that deterministic facts caused the null result, or that a lower S budget would save memory safely. The fixture omitted the mining scenario block used in production, equally in both arms. Section retrieval remains off in production.
 
+## E09 — Ollama 0.40.4 US unload retest
+
+The retained `eval_fixtures/us_ab_ollama0404_matrix.{csv,md}` contains the per-ticker records. QFIN and OGC used a **new** frozen fixture because Equibles had ingested additional filings after E07. Both arms used Ollama 0.40.4, NVFP4/MLX build `f52f2b9a2363`, the 12K-character Equibles-result cap, and between-ticker unloading. G omitted between-agent unloading; H retained it. Three passes per arm were interleaved. These are within-fixture policy comparisons; E07's 0.40.2 absolute times and peaks are not a paired software-version control. The server requested Q8_0 KV cache and flash attention, but effective MLX KV precision and flash-attention application remain unverified. The matrix also records one server restart during the batch; its settings should not be inferred from a single startup line.
+
+| Pass | G: minutes / accepted / peak `held` GiB | H: minutes / accepted / peak `held` GiB |
+|---:|---|---|
+| 1 | 62.2 / 2 of 2 / 31.68 | 51.1 / 2 of 2 / 26.10 |
+| 2 | 89.7 / 1 of 2 / 32.39 | 50.4 / 2 of 2 / 26.17 |
+| 3 | 49.1 / 2 of 2 / 30.76 | 40.3 / 2 of 2 / 25.88 |
+
+Pass minutes are sums of the OGC and QFIN elapsed-time rows, rounded to one decimal; each peak is the highest runner-reported `held` in that pass. In G pass 2, QFIN alone took 57.4 minutes with a **derived** 20.5 decode tokens/s. H's QFIN rows took 20.2, 28.7 and 18.2 minutes with derived 47.2, 43.9 and 49.5 decode tokens/s. The arms could make different tool calls and generate different output lengths. The within-fixture result supports keeping between-agent unloading for this workload, not an identical-prompt inference-speed claim.
+
+The Equibles ingestion worker was stopped. The before/after database-table diff moved only scheduler bookkeeping (`queue`, `queue_metric`, `queue_metric_capture`); among 375 calls with no reported errors, all 29 repeated canonical calls had byte-identical SHA-256 payloads. The server logged 299 completed requests; 291 joined one-to-one with analyzer call records, and eight were left unassigned. Neither the repeated-call check nor the join count proves all agent-selected evidence was identical across arms.
+
+G pass 2 OGC was rejected for leaked thinking/process narration and duplicated FACTS markers; the previous good report remained available. This was the third observed leaked-thinking case, after NTL on 9 October and SMI on 14 October, and the first on 0.40.4. G pass 3 QFIN had a risk-score/prose mismatch warning. No semantic report scoring was performed for E09. The 5/6 versus 6/6 guard result is a publication result, **not** an answer-quality ranking. H's lower peaks than E07's H are compatible with improvement after the runtime update, but fixture drift prevents assigning a causal 1.5 GiB saving to the update.
+
 ## Revision boundary
 
-A fixed seed did not establish exact NVFP4/MLX replay in this tested runtime. These batches therefore retain three passes and field-level spread. Exact model manifest prefixes, fixture hash, runner, and Ollama version are part of the treatment identity; a model tag alone is not. The semantic scoring was performed by Claude, an AI reviewer, against a rubric, not by an independent human and not as an exhaustive sentence-by-sentence audit. The sanitised aggregate does not permit independent re-scoring of the complete reports.
+A fixed seed did not establish exact NVFP4/MLX replay in this tested runtime. These batches therefore retain three passes and field-level spread. Exact model manifest prefixes, fixture hash, runner, and Ollama version are part of the treatment identity; a model tag alone is not. Where semantic scoring was performed in earlier batches, Claude acted as an AI reviewer against a rubric; this was not independent human review or an exhaustive sentence-by-sentence audit. E09 was not semantically scored. The sanitised aggregates do not permit independent re-scoring of the complete reports.
 
-The E01-E07 source artifacts were inspected on 13-14 October 2026; E08 was scored on 15 October. A model tag is not an immutable build identifier: `qwen3.6-35b-a3b-80k` resolved to different weights and runners during this investigation. No commit ID is given for records whose revision was not fixed.
+The E01-E07 source artifacts were inspected on 13-14 October 2026; E08 was scored on 15 October; E09 was compiled on 16 October and was not semantically scored. A model tag is not an immutable build identifier: `qwen3.6-35b-a3b-80k` resolved to different weights and runners during this investigation. No commit ID is given for records whose revision was not fixed.
