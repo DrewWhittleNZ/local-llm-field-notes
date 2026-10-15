@@ -460,6 +460,17 @@ Our vault used to cut long company documents down to 10,000 characters. An inter
 
 Raising the cap to 20,000 characters let that KPG covenant information reach the model. Three live company runs were somewhat slower and used more memory, but did not fall off the earlier severe MLX speed cliff; KPG's new report correctly used the newly available covenant limit. The lesson is not "always send twice as much." It is to measure which facts a company question needs, select the relevant document sections, and test that the answer improves without swamping the model.
 
+We then tested a smarter section picker. The existing method looks for keywords; the new one ranks document sections separately for each AI helper. In an offline check, the new picker lost fewer probe terms (47 instead of 60) while sending roughly 10-17% less text. It could include KPG's 33.3% *pro forma* gearing paragraph within 10,000 characters; the keyword picker needed 20,000. That showed better coverage of this particular passage, not yet a better report.
+
+So we froze the same three companies and ran each picker three times with the same 20,000-character allowance:
+
+| Document picker | Reports accepted | Checked wrong or mislabelled facts | Three-company pass times |
+|---|---:|---:|---|
+| Existing keyword picker | 9 of 9 | 0 | 58.2, 57.3, 53.6 minutes |
+| Per-helper section picker | 9 of 9 | 2 minor label errors | 58.7, 54.9, 53.5 minutes |
+
+Neither picker led any KPG report to use the 33.3% pro forma figure. All six KPG reports used the current 37.4% gearing figure already supplied by Python. Claude scored the reports as an AI reviewer; Drew did not independently re-score them. With only nine reports per method, this does not prove the section picker is worse, but it did not demonstrate a report-quality gain. It remains off. A smaller excerpt may still save memory, which would be a different test. One plausible reason the coverage gain did not show up in the checked answers is that code already supplied some decisive figures; this comparison does not isolate that explanation. [The measurements and limitations are in the evidence appendix](evidence-and-provenance.md#e08--frozen-vault-section-retrieval-ab-extract).
+
 ## A number can look right while saying the opposite thing
 
 The last report from the old M1/4B setup said KPG's AFFO had fallen 7.7%. The first new M6/Qwen3.6 report said it had grown 7.9% to $100.2 million.
@@ -724,7 +735,7 @@ These corrections are not something to hide. They are the main recipe:
 - Compare more new M6 report figures with the archived M1 report and original company documents.
 - Keep the fixed cross-currency dividend-cover calculation under regression test, including missing rates and currencies.
 - Investigate score spread and the malformed-report cases using the saved prompts and source data. The completed frozen batches still cannot estimate a general accuracy rate.
-- Test whether a smarter document selector beats the measured 20K-character excerpt baseline on questions with known answers.
+- Test whether the measured section picker can use a smaller excerpt than the 20K-character baseline without losing answer quality. Its equal-budget test improved a coverage proxy, but not the checked reports.
 - Keep checking the now-explicit classification and recommendation rules, including Sell for an owned position, against real reports.
 - If another application timer disagrees with the outer clock, check sleep and pauses before calling the gap model time; sleep/wake remains a plausible but unclosed explanation for the older 27B gap.
 

@@ -21,6 +21,7 @@ These notes are for people like me who are trying to build something with AI wit
 - [*From Faster Answers to Better Decisions*](from-faster-answers-to-better-decisions.md) is the plain-language account. Start here if you do not have an AI background.
 - [*From Tokens per Second to Decision Quality*](from-tokens-per-second-to-decision-quality.md) is the technical field report, with methods and limitations for readers who want to challenge the work.
 - [Evidence and provenance](evidence-and-provenance.md) contains sanitised numerical extracts and identifies what still rests on internal records.
+- [Changes to the field notes](CHANGELOG.md) records substantive additions and corrections after the first public version.
 
 The plain-language and technical accounts are meant to stay in sync. Neither is investment advice or a recommendation to buy or sell any security. The point is how to test an AI-assisted analytical system without mistaking a faster or more polished answer for a trustworthy one.
 
