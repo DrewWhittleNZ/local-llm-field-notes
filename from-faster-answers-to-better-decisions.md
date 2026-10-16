@@ -667,6 +667,16 @@ Even an exact list prepared by Python could be changed when the AI retold it in 
 
 We found the opposite problem in the checkers too: some warnings were false alarms caused by wording such as “while” or “non-existential,” or by a financial label that was valid for US filings. We replayed the revised checks over saved reports to confirm that the false alarms disappeared without losing known real warnings. The guard itself needs testing, not just the AI's answers.
 
+### A form with every box filled can still change your number
+
+We tried a newer, smaller-on-the-desk model on three saved company cases. It wrote individual tokens faster and needed less model memory, but it wrote roughly twice as many tokens and did not finish company reports faster. Its report-format checker rejected five of twelve attempts, including an initial test; the existing model had no rejections in its nine comparison attempts. These are small, frozen-workload results, not a general ranking of the models.
+
+We then tried giving the newer model a form that *required* every answer box. In one corrected test, the form came back complete. Five of six checked facts matched the earlier reports. But the model changed one portfolio-specific dollar amount that had been supplied explicitly, despite being told not to recalculate it. For a public-safe illustration, if the supplied amount is scaled to **$100**, the returned amount scales to **$84.88**. Both figures have been changed by the same factor; they are not the investor's real amounts.
+
+There was a test mistake along the way: the first version of this form test accidentally omitted the earlier reports from the question sent to the model. Its answer was discarded, the sent question was checked, and only the corrected test counted. That matters as much as checking the model's answer: a test can only tell you about information it actually supplied.
+
+Requiring every box solved the *missing-box problem in that one corrected test*, not the wrong-number problem or the earlier trial's rejection rate. The next safeguard is to have ordinary code carry known amounts into the finished report and compare any model-supplied value with its source. [The sanitised counts and limits are in E10](evidence-and-provenance.md#e10--a-complete-schema-still-changed-a-supplied-figure).
+
 ## Mistakes we made while investigating
 
 The investigation was useful partly because several attractive explanations turned out to be incomplete.

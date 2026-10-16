@@ -2,6 +2,11 @@
 
 This lists substantive changes to the published account, not every spelling or layout edit. The reports are an ongoing field study; new evidence can narrow an earlier claim without making the earlier measurement disappear.
 
+## 17 October 2026 — LFM trial and structured-output probe
+
+- Added a frozen three-company LFM2.5-versus-production comparison and a corrected, single-call schema probe. The schema filled every required field in that probe but changed one explicitly supplied, portfolio-specific figure; the public extract uses proportionally scaled numbers. See the [plain-language case](from-faster-answers-to-better-decisions.md#a-form-with-every-box-filled-can-still-change-your-number), [technical account](from-tokens-per-second-to-decision-quality.md#1313-a-faster-reasoning-moe-failed-the-final-output-contract-and-a-schema-exposed-a-different-error), and [E10 evidence limits](evidence-and-provenance.md#e10--a-complete-schema-still-changed-a-supplied-figure).
+- Recorded that the first schema probe omitted upstream reports and was discarded. Neither the corrected single call nor the candidate's faster per-token decode establishes an end-to-end quality or speed win. The production model and report interface were not changed.
+
 ## 16 October 2026 — Ollama 0.40.4 US retest
 
 - Added the fresh-fixture, three-pass G/H comparison on Ollama 0.40.4. Between-agent unloading still reduced memory and elapsed time within that fixture, so the workaround remains. The upgrade's standalone effect cannot be quantified against the older fixture. See the [plain-language account](from-faster-answers-to-better-decisions.md#the-newer-ollama-still-needed-the-memory-workaround), [technical analysis](from-tokens-per-second-to-decision-quality.md#1312-ollama-0404-reduced-memory-under-unloading-but-did-not-eliminate-the-cliff), and [E09 measurements](evidence-and-provenance.md#e09--ollama-0404-us-unload-retest).

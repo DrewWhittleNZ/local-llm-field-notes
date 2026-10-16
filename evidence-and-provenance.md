@@ -169,8 +169,33 @@ The Equibles ingestion worker was stopped. The before/after database-table diff 
 
 G pass 2 OGC was rejected for leaked thinking/process narration and duplicated FACTS markers; the previous good report remained available. This was the third observed leaked-thinking case, after NTL on 9 October and SMI on 14 October, and the first on 0.40.4. G pass 3 QFIN had a risk-score/prose mismatch warning. No semantic report scoring was performed for E09. The 5/6 versus 6/6 guard result is a publication result, **not** an answer-quality ranking. H's lower peaks than E07's H are compatible with improvement after the runtime update, but fixture drift prevents assigning a causal 1.5 GiB saving to the update.
 
+## E10 — A complete schema still changed a supplied figure
+
+This public-safe extract comes from the private frozen `lfm_trial_20261016b` fixture, per-pass matrix, analyzer call logs, and the corrected KPG.NZ structured-output probe. The trial ran on Ollama 0.40.4 with an LFM2.5-24B-A2B Q4_K_M candidate at 80K configured context and the unchanged Qwen3.6-35B-A3B NVFP4 production tag. KPG.NZ, SMI.NZ and IDX.AX used copies of the same fixture. The candidate also had an initial three-ticker gate; production did not. Counts below are *report-publication guard* outcomes, not factual-accuracy scores.
+
+| Stage | LFM reports passing guard | Production reports passing guard |
+|---|---:|---:|
+| Candidate-only gate | 1 of 3 | Not run |
+| Comparison pass 1 | 1 of 3 | 3 of 3 |
+| Comparison pass 2 | 3 of 3 | 3 of 3 |
+| Comparison pass 3 | 2 of 3 | 3 of 3 |
+| Totals over attempts made | 7 of 12 | 9 of 9 |
+
+The candidate's checked decode rates across the comparison passes were about 63-69 tokens/s versus 47-49 for production. It generated about 75K-100K completion tokens per ticker versus about 40K-55K, so these rates did not translate into a faster end-to-end ticker run. Candidate memory was reported as roughly 15-17 GB from the residency screen and llama.cpp projected use; production's roughly 28-30 GiB was runner-reported `held` during the batch. Those are **not the same memory measure**. All nine candidate `portfolio_decision_task` calls in the comparison finished with `stop`, not a recorded length limit. The rejected outputs were checked in raw logs: required fields or whole delimiters were absent, rather than merely spelled in an unrecognised variant. Published candidate reports had no observed raw tool-call syntax or `<think>` tag leak. The small sample and lack of full semantic scoring prevent a general model-quality ranking.
+
+An isolated JSON-schema probe then revisited the rejected KPG final decision. Its *first* attempt was invalid: the extraction script captured the task description but omitted six upstream reports that CrewAI appends separately. That output was discarded. The corrected probe reconstructed those reports from the run log and checked that the actual sent payload contained their values. The model then returned every required field in a typed object. Five of six carried-forward FACTS values were checked against the real upstream text and matched; the one failure was a portfolio-specific position-headroom amount, supplied explicitly several times with an instruction not to recompute it.
+
+| Check in corrected KPG probe | Result |
+|---|---|
+| Six required carried-forward fields present | Yes |
+| Values matching upstream source | Five of six |
+| Position headroom | Wrong: model substituted a smaller amount despite the supplied value |
+| Proportional illustration after sanitisation | Supplied **100.00** → output **84.88** |
+
+The two illustrated values are the private amounts multiplied by the **same scaling factor** and rounded to two decimals; they are not actual portfolio amounts. The source field, model field and validation verdict are preserved, but raw prompts, holdings, exact position headroom, complete report text and host paths are not published. This extract cannot independently reproduce the final call or re-score the full reports. It supports a narrower claim: the corrected schema probe solved *presence and type for one final call*, while leaving a demonstrable source-value error. It does **not** establish that schema enforcement fixes the trial-wide rejection rate, that LFM is generally worse, or that the failed first probe says anything about model quality.
+
 ## Revision boundary
 
-A fixed seed did not establish exact NVFP4/MLX replay in this tested runtime. These batches therefore retain three passes and field-level spread. Exact model manifest prefixes, fixture hash, runner, and Ollama version are part of the treatment identity; a model tag alone is not. Where semantic scoring was performed in earlier batches, Claude acted as an AI reviewer against a rubric; this was not independent human review or an exhaustive sentence-by-sentence audit. E09 was not semantically scored. The sanitised aggregates do not permit independent re-scoring of the complete reports.
+A fixed seed did not establish exact NVFP4/MLX replay in this tested runtime. These batches therefore retain three passes and field-level spread. Exact model manifest prefixes, fixture hash, runner, and Ollama version are part of the treatment identity; a model tag alone is not. Where semantic scoring was performed in earlier batches, Claude acted as an AI reviewer against a rubric; this was not independent human review or an exhaustive sentence-by-sentence audit. E09 was not semantically scored. E10 had targeted checks of the corrected probe's six carried-forward fields, not full semantic scoring of trial reports. The sanitised aggregates do not permit independent re-scoring of the complete reports.
 
-The E01-E07 source artifacts were inspected on 13-14 October 2026; E08 was scored on 15 October; E09 was compiled on 16 October and was not semantically scored. A model tag is not an immutable build identifier: `qwen3.6-35b-a3b-80k` resolved to different weights and runners during this investigation. No commit ID is given for records whose revision was not fixed.
+The E01-E07 source artifacts were inspected on 13-14 October 2026; E08 was scored on 15 October; E09 was compiled on 16 October and was not semantically scored; E10's trial and corrected single-call probe were reviewed on 17 October. A model tag is not an immutable build identifier: `qwen3.6-35b-a3b-80k` resolved to different weights and runners during this investigation. No commit ID is given for records whose revision was not fixed.
